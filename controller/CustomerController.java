@@ -217,23 +217,18 @@ public class CustomerController {
 		} else {
 			products = product2;
 		}
-		
-		List<ProductStockPrice> pdts = cartimp.getCartProds(cust1.getCustId());
-		System.out.println("order gst is: "+BLL.getOrderGST(products));
-		om.setGst(BLL.getOrderGST(pdts));
-		model.addAttribute("products", pdts);
+		om.setGst(BLL.getOrderGST(products));
 		model.addAttribute("payment_id", om.getPaymentReference());
 		System.out.println("order shipping pincode is: "+om.getShippingPincode());
-		odao.insertIntoOrders(om, pdts);
-		for(ProductStockPrice p:pdts) {
+		odao.insertIntoOrders(om, products);
+		for(ProductStockPrice p:products) {
 			stckdao.updateStocks(p.getProd_id(), p.getQuantity());
 			System.out.println("stock updated");
 		}
 		System.out.println(id);
 		model.addAttribute("customer", cust1);
 		model.addAttribute("payid", id);
-		//model.addAttribute("products", products);
-
+		model.addAttribute("products", products);
 		return "invoice";
 	}
 
